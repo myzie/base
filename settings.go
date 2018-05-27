@@ -2,6 +2,7 @@ package env
 
 import (
 	"github.com/namsral/flag"
+	log "github.com/sirupsen/logrus"
 )
 
 // Settings for the application
@@ -10,6 +11,21 @@ type Settings struct {
 	ObjectStore ObjectStoreSettings
 	Auth        AuthSettings
 	HTTP        HTTPSettings
+}
+
+// Log settings via the standard logger while omitting
+// the sensitive fields.
+func (s Settings) Log() {
+	log.WithFields(log.Fields{
+		"storage_bucket": s.ObjectStore.Bucket,
+		"storage_url":    s.ObjectStore.URL,
+		"storage_region": s.ObjectStore.Region,
+		"http_address":   s.HTTP.ListenAddress,
+		"db_name":        s.Database.Name,
+		"db_user":        s.Database.User,
+		"db_host":        s.Database.Host,
+		"db_port":        s.Database.Port,
+	}).Infof("Startup options")
 }
 
 // HTTPSettings configures the application HTTP interface.

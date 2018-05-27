@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/labstack/echo"
-
 	"github.com/jinzhu/gorm"
+	"github.com/labstack/echo"
 	minio "github.com/minio/minio-go"
+	log "github.com/sirupsen/logrus"
 )
 
 // Env contains resource handles needed for this web service.
@@ -29,6 +29,11 @@ func (env *Env) Destroy() {
 		env.DB = nil
 	}
 	// Nothing else needs cleanup...
+}
+
+// Run the HTTP server
+func (env *Env) Run() error {
+	return env.Echo.Start(env.Settings.HTTP.ListenAddress)
 }
 
 // New environment using settings provided via command line options and
@@ -88,4 +93,13 @@ func New() (*Env, error) {
 	}
 
 	return env, nil
+}
+
+// Must is a helper that wrap New and exits the process on failure
+func Must() *Env {
+	e, err := New()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return e
 }
