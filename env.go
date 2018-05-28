@@ -66,9 +66,11 @@ func New() (*Env, error) {
 		}
 	}
 
-	env.DB, err = ConnectPostgres(s.Database)
-	if err != nil {
-		return nil, err
+	if s.Database.Host != "" && s.Database.Port != 0 {
+		env.DB, err = ConnectPostgres(s.Database)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	if s.Auth.PrivateKey != "" {

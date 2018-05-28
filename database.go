@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
+	// Select postgres driver
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 // ConnectPostgres connects to a Postgres database using the given settings
@@ -24,7 +26,7 @@ func ConnectPostgres(s DatabaseSettings) (*gorm.DB, error) {
 		return nil, errors.New("Must specify database password")
 	}
 
-	sslMode := "enable"
+	sslMode := "require"
 	if s.DisableSSL {
 		sslMode = "disable"
 	}

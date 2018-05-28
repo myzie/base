@@ -75,7 +75,7 @@ func GetSettings() Settings {
 	flag.StringVar(&s.Database.Name, "db-name", "", "DB name")
 	flag.StringVar(&s.Database.User, "db-user", "", "DB user")
 	flag.StringVar(&s.Database.Password, "db-password", "", "DB password")
-	flag.StringVar(&s.Database.Host, "db-host", "localhost", "DB host address")
+	flag.StringVar(&s.Database.Host, "db-host", "", "DB host address")
 	flag.IntVar(&s.Database.Port, "db-port", 5432, "DB port")
 	flag.BoolVar(&s.Database.DisableSSL, "db-disable-ssl", false, "DB disable SSL")
 
