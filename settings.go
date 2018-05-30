@@ -1,4 +1,4 @@
-package env
+package base
 
 import (
 	"github.com/namsral/flag"
