@@ -24,7 +24,7 @@ type myService struct {
 
 You then have easy access to the database handle wherever you have access to this service.
 
-See the [simple example](./examples/simple).
+See the [simple example](./examples/simple/main.go).
 
 ## Limitations
 
