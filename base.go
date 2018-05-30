@@ -33,6 +33,7 @@ func (base *Base) Destroy() {
 
 // Run the HTTP server
 func (base *Base) Run() error {
+	log.WithField("address", base.Settings.HTTP.ListenAddress).Infof("Listening")
 	return base.Echo.Start(base.Settings.HTTP.ListenAddress)
 }
 
