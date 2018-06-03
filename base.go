@@ -7,6 +7,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	minio "github.com/minio/minio-go"
 	log "github.com/sirupsen/logrus"
 )
@@ -35,6 +36,19 @@ func (base *Base) Destroy() {
 func (base *Base) Run() error {
 	log.WithField("address", base.Settings.HTTP.ListenAddress).Infof("Listening")
 	return base.Echo.Start(base.Settings.HTTP.ListenAddress)
+}
+
+// JWTMiddleware returns JWT authentication middleware
+func (base *Base) JWTMiddleware() echo.MiddlewareFunc {
+	if base.AuthPublicKey == nil {
+		panic("JWTMiddleware unavailable: no public key set")
+	}
+	return middleware.JWTWithConfig(middleware.JWTConfig{
+		Claims:        &JWTClaims{},
+		SigningKey:    base.AuthPublicKey,
+		SigningMethod: "RS512",
+		ContextKey:    "user",
+	})
 }
 
 // New environment using settings provided via command line options and
