@@ -9,6 +9,20 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
+// SSLMode defines SSL settings used to connect to Postgres
+type SSLMode string
+
+const (
+	// SSLModeDisabled disables SSL
+	SSLModeDisabled SSLMode = "disable"
+
+	// SSLModeRequired makes SSL required
+	SSLModeRequired SSLMode = "require"
+
+	// SSLModeVerifyCA enables SSL with server and client certificates
+	SSLModeVerifyCA SSLMode = "verify-ca"
+)
+
 // ConnectPostgres connects to a Postgres database using the given settings
 // and returns a *gorm.DB handle.
 func ConnectPostgres(s DatabaseSettings) (*gorm.DB, error) {
@@ -26,13 +40,18 @@ func ConnectPostgres(s DatabaseSettings) (*gorm.DB, error) {
 		return nil, errors.New("Must specify database password")
 	}
 
-	sslMode := "require"
-	if s.DisableSSL {
-		sslMode = "disable"
-	}
+	args := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=%s host=%s",
+		s.User, s.Password, s.Name, s.SSLMode, s.Host)
 
-	args := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=%s",
-		s.User, s.Password, s.Name, sslMode)
+	if s.SSLRootCert != "" {
+		args += fmt.Sprintf(" sslrootcert=%s", s.SSLRootCert)
+	}
+	if s.SSLCert != "" {
+		args += fmt.Sprintf(" sslcert=%s", s.SSLCert)
+	}
+	if s.SSLKey != "" {
+		args += fmt.Sprintf(" sslkey=%s", s.SSLKey)
+	}
 
 	db, err := gorm.Open("postgres", args)
 	if err != nil {

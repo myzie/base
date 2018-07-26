@@ -50,12 +50,15 @@ type ObjectStoreSettings struct {
 // DatabaseSettings specifies location and authentication information
 // needed to connect to the application database.
 type DatabaseSettings struct {
-	Host       string
-	Port       int
-	User       string
-	Password   string
-	Name       string
-	DisableSSL bool
+	Host        string
+	Port        int
+	User        string
+	Password    string
+	Name        string
+	SSLMode     string
+	SSLRootCert string
+	SSLCert     string
+	SSLKey      string
 }
 
 // GetSettings returns application configuration derived from command line
@@ -77,7 +80,10 @@ func GetSettings() Settings {
 	flag.StringVar(&s.Database.Password, "db-password", "", "DB password")
 	flag.StringVar(&s.Database.Host, "db-host", "", "DB host address")
 	flag.IntVar(&s.Database.Port, "db-port", 5432, "DB port")
-	flag.BoolVar(&s.Database.DisableSSL, "db-disable-ssl", false, "DB disable SSL")
+	flag.StringVar(&s.Database.SSLMode, "db-ssl-mode", "", "DB SSL mode")
+	flag.StringVar(&s.Database.SSLRootCert, "db-ssl-root-cert", "", "DB SSL root certificate")
+	flag.StringVar(&s.Database.SSLCert, "db-ssl-cert", "", "DB SSL client certificate")
+	flag.StringVar(&s.Database.SSLKey, "db-ssl-key", "", "DB SSL client key")
 
 	flag.StringVar(&s.HTTP.ListenAddress, "http", "127.0.0.1:8080", "HTTP listen address")
 
